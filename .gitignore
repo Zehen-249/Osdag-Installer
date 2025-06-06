@@ -1,0 +1,4 @@
+**/*.exe
+!/*.exe
+!/osdag-pixi/pixi.exe
+./osdag-pixi/.pixi/
