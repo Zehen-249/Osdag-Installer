@@ -1,9 +1,14 @@
-OutFile "Osdag-v2025.01.0.2-win.exe"
-Name "Osdag"
-VIProductVersion "2025.01.0.2"
-VIAddVersionKey "ProductName" "Osdag"
-VIAddVersionKey "CompanyName" "Osdag Team"
-VIAddVersionKey "FileDescription" "Osdag version 2025.01.0.2 windows Installer"
+!define APP_NAME "Osdag"
+!define APP_VERSION "2025.01.0.2"
+!define APP_PUBLISHER "Osdag Team IIT Bombay"
+
+OutFile "Osdag-v${APP_VERSION}-win_test.exe"
+Name "${APP_NAME}"
+VIProductVersion "${APP_VERSION}"
+VIAddVersionKey "ProductName" "${APP_NAME}"
+VIAddVersionKey "FileVersion" "${APP_VERSION}"
+VIAddVersionKey "FileDescription" "Osdag version ${APP_VERSION} windows Installer"
+VIAddVersionKey "LegalCopyright" "© 2025 Osdag Team, IIT Bombay"
 
 RequestExecutionLevel user
 
@@ -68,19 +73,24 @@ Section "Osdag" SEC_Main
 
     ; copy files to install\Osdag folder
     File /r "..\osdag-pixi\.pixi"
+    File /r "..\osdag-pixi\icons"
     File "..\license.txt"
     File "..\run.bat"
     File "..\update.bat"
     File "..\nircmd.exe"
 
     ; create uninstaller for osdag
-    WriteUninstaller "$INSTDIR\Osdag\uninstaller.exe"
+    WriteUninstaller "$INSTDIR\Osdag\Uninstall.exe"
 
     ; Registry keys
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Osdag" "DisplayName" "Osdag"
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Osdag" "UninstallString" "$INSTDIR\Osdag\uninstaller.exe"
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Osdag" "DisplayIcon" "$INSTDIR\Osdag\.pixi\envs\default\Lib\site-packages\osdag\data\ResourceFiles\images\Osdag_App_icon.ico"
-    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Osdag" "InstallLocation" "$INSTDIR\Osdag"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "DisplayName" "${APP_NAME}"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "Publisher" "${APP_PUBLISHER}"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "DisplayVersion" "${APP_VERSION}"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "UninstallString" "$INSTDIR\Osdag\Uninstall.exe"
+    WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "InstallLocation" "$INSTDIR\Osdag"
+    WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "NoModify" 1
+    WriteRegDWORD HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}" "NoRepair" 1
+
 SectionEnd
 
 ; ; optional plugins installattion
@@ -98,15 +108,15 @@ SectionEnd
 Section "Startmenu Shortcut" SEC_SM_Shortcuts
     CreateDirectory "$SMPROGRAMS\Osdag"
 
-    CreateShortcut "$SMPROGRAMS\Osdag\Osdag.lnk" "$INSTDIR\Osdag\nircmd.exe" 'exec hide "$INSTDIR\Osdag\run.bat"' "$INSTDIR\Osdag\.pixi\envs\default\Lib\site-packages\osdag\data\ResourceFiles\images\Osdag_App_icon.ico" 0
+    CreateShortcut "$SMPROGRAMS\Osdag\Osdag.lnk" "$INSTDIR\Osdag\nircmd.exe" 'exec hide "$INSTDIR\Osdag\run.bat"' "$INSTDIR\Osdag\icons\Osdag_App_icon.ico" 0
    
-    CreateShortcut "$SMPROGRAMS\Osdag\Uninstaller.lnk" "$INSTDIR\Osdag\uninstaller.exe" "" "$INSTDIR\Osdag\.pixi\envs\default\Lib\site-packages\osdag\data\ResourceFiles\images\Osdag_App_icon.ico" 0
+    CreateShortcut "$SMPROGRAMS\Osdag\Uninstall.lnk" "$INSTDIR\Osdag\Uninstall.exe" "" "$INSTDIR\Osdag\icons\Osdag_App_icon.ico" 0
 SectionEnd
 
 ; optional
 Section "Desktop Shortcut" SEC_DESK_Shortcuts
 
-    CreateShortcut "$DESKTOP\Osdag.lnk" "$INSTDIR\Osdag\nircmd.exe" 'exec hide "$INSTDIR\Osdag\run.bat"' "$INSTDIR\Osdag\.pixi\envs\default\Lib\site-packages\osdag\data\ResourceFiles\images\Osdag_App_icon.ico" 0
+    CreateShortcut "$DESKTOP\Osdag.lnk" "$INSTDIR\Osdag\nircmd.exe" 'exec hide "$INSTDIR\Osdag\run.bat"' "$INSTDIR\Osdag\icons\Osdag_App_icon.ico" 0
 
 SectionEnd
 
@@ -125,12 +135,12 @@ FunctionEnd
 Section "Uninstall"
 
     RMDir /r $INSTDIR
-
+    
     Delete "$DESKTOP\Osdag.lnk"
     Delete "$SMPROGRAMS\Osdag\Osdag.lnk"
-    Delete "$SMPROGRAMS\Osdag\Uninstaller.lnk"
+    Delete "$SMPROGRAMS\Osdag\Uninstall.lnk"
     RMDir /r "$SMPROGRAMS\Osdag"
 
-    DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Osdag"
+    DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}"
 
 SectionEnd
