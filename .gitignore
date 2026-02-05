@@ -2,3 +2,9 @@
 !/*.exe
 !/osdag-pixi/pixi.exe
 ./osdag-pixi/.pixi/
+**/*.zip
+**/*.tar.gz
+**/*.tar
+**/*.tar.bz2
+**/*.7z
+**/*.rar
